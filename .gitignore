@@ -1,0 +1,26 @@
+# temporary per-session workspaces (uploads, clips, results)
+cache/
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+# R
+.Rhistory
+.RData
+.Rproj.user/
+rsconnect/
+# OS / editors
+.DS_Store
+.vscode/
+.idea/
+# audio never belongs in the repo
+*.wav
+*.flac
+*.ogg
+.pytest_cache/
+test-results/
+!demo/*.wav
+
+# VS Code / macOS
+.DS_Store

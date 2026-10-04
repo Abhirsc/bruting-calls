@@ -1,0 +1,9 @@
+cache/
+.git/
+__pycache__/
+.venv/
+venv/
+*.wav
+*.flac
+*.ogg
+!demo/*.wav

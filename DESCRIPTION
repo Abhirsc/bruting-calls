@@ -1,0 +1,13 @@
+Type: Project
+Package: brutingcalls
+Title: BirdNET Call Detection, Verification and Reporting for Demeter Recordings
+Version: 0.4.0
+Authors@R: person("Abhimanyu Raj", "Singh", role = c("aut", "cre"))
+Description: Shiny app that runs BirdNET on passive acoustic recordings, supports human
+    verification of low-confidence detections and reports species, call counts, timing,
+    durations, intervals and frequency. Part of the Demeter Insights apps.
+License: MIT + file LICENSE
+Depends: R (>= 4.3)
+Imports: shiny, bslib, ggplot2, dplyr, DT, jsonlite, processx, htmltools, sessioninfo
+SystemRequirements: Python (>= 3.10) with the packages in requirements.txt
+Encoding: UTF-8

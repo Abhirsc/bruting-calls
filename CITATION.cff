@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Bruting Calls: BirdNET call detection, verification and reporting for Demeter acoustic recordings"
+version: 0.4.0
+date-released: 2026-10-04
+license: MIT
+authors:
+  - family-names: Singh
+    given-names: Abhimanyu Raj
+    # orcid: https://orcid.org/0000-0000-0000-0000
+keywords:
+  - bioacoustics
+  - BirdNET
+  - passive acoustic monitoring
+  - Shiny
+  - Demeter Insights
+abstract: >-
+  A Shiny app (Python and R front-ends) that runs BirdNET on passive acoustic recordings,
+  supports human verification of low-confidence detections, and reports species, call
+  counts per day, call timing, durations, intervals and frequency as a PDF and CSV tables.
+# identifiers: add the Zenodo DOI after the first archived release
+references:
+  - type: article
+    title: "BirdNET: A deep learning solution for avian diversity monitoring"
+    authors:
+      - family-names: Kahl
+        given-names: Stefan
+      - family-names: Wood
+        given-names: Connor M.
+      - family-names: Eibl
+        given-names: Maximilian
+      - family-names: Klinck
+        given-names: Holger
+    journal: Ecological Informatics
+    volume: 61
+    start: 101236
+    year: 2021
+    doi: 10.1016/j.ecoinf.2021.101236

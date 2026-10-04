@@ -1,0 +1,13 @@
+# Bruting Calls — Python dependencies (tested with Python 3.12 on macOS arm64)
+shiny>=1.8,<2
+birdnetlib==0.18.1
+tensorflow>=2.16          # BirdNET model runtime (birdnetlib uses tflite_runtime instead if installed)
+librosa>=0.10
+resampy>=0.4
+audioread>=3.0
+pydub>=0.25
+soundfile>=0.12
+numpy>=1.26
+pandas>=2.1
+matplotlib>=3.8
+tzdata                    # time-zone database for slim containers / Windows
