@@ -1,4 +1,6 @@
 # R packages for app.R (the R front-end also needs the Python environment from requirements.txt)
 pkgs <- c("shiny", "bslib", "ggplot2", "dplyr", "DT", "jsonlite", "processx", "htmltools", "sessioninfo", "renv")
+repos <- getOption("repos")
+if (is.null(repos) || repos[["CRAN"]] %in% c("@CRAN@", "")) repos <- c(CRAN = "https://cloud.r-project.org")
 missing <- setdiff(pkgs, rownames(installed.packages()))
-if (length(missing)) install.packages(missing, repos = "https://cloud.r-project.org")
+if (length(missing)) install.packages(missing, repos = repos)

@@ -4,6 +4,16 @@ All notable changes are listed here. Versions follow [semantic versioning](https
 PATCH = bug fix, MINOR = new compatible feature, MAJOR = breaking change to inputs or outputs.
 Bump `APP_VERSION` (app.py), `DESCRIPTION` and `CITATION.cff` together, then tag `vX.Y.Z`.
 
+## [Unreleased]
+
+### Changed
+- **Dockerfile** ready for Hugging Face Spaces:
+  - runs as user 1000
+  - builds the Python app by default (smaller image); `--build-arg WITH_R=true` adds R
+  - takes R packages as prebuilt binaries from Posit Package Manager, since Debian's own are too old for `app.R`
+- README: Hugging Face settings block, plus step-by-step guides for Hugging Face Spaces (upload with `hf`) and Posit Connect Cloud.
+- `install.R` respects an already configured package repository.
+
 ## [0.4.0] — 2026-10-04
 
 ### Added

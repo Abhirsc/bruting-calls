@@ -1,23 +1,38 @@
-# Bruting Calls — shared-server image.
-#   docker build -t bruting-calls .
-#   docker run -p 8000:8000 bruting-calls                       # Shiny for Python (default)
-#   docker run -p 8000:8000 -e APP=r bruting-calls              # Shiny for R
-FROM python:3.12-slim
+# Bruting Calls — container image (Hugging Face Docker Space, or any Docker host).
+#
+#   docker build -t bruting-calls .                                  # Python app (default, smaller)
+#   docker run -p 8000:8000 bruting-calls
+#
+#   docker build --build-arg WITH_R=true -t bruting-calls-r .         # also install R + app.R
+#   docker run -p 8000:8000 -e APP=r bruting-calls-r
+#
+# Never set BRUTING_ALLOW_STOP on a shared/hosted container.
+FROM python:3.12-slim-bookworm
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        libsndfile1 ffmpeg r-base r-cran-shiny r-cran-bslib r-cran-ggplot2 r-cran-dplyr \
-        r-cran-dt r-cran-jsonlite r-cran-processx r-cran-htmltools \
+ARG WITH_R=false
+RUN apt-get update && apt-get install -y --no-install-recommends libsndfile1 \
+    && if [ "$WITH_R" = "true" ]; then apt-get install -y --no-install-recommends r-base-core; fi \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
-COPY requirements.txt requirements-lock.txt ./
-RUN pip install --no-cache-dir -r requirements.txt \
-    && python -c "from birdnetlib.analyzer import Analyzer; Analyzer()"   # bake the model files into the image
+# Hugging Face Spaces run the container as user 1000
+RUN useradd -m -u 1000 user
+ENV HOME=/home/user PATH=/home/user/.local/bin:$PATH
+WORKDIR /home/user/app
 
-COPY app.py app.R install.R DESCRIPTION LICENSE CITATION.cff ./
-COPY www ./www
-COPY demo ./demo
-RUN Rscript install.R
+COPY --chown=user requirements.txt requirements-lock.txt ./
+RUN pip install --no-cache-dir -r requirements.txt \
+    && python -c "from birdnetlib.analyzer import Analyzer; Analyzer()"   # fail the build early if the model can't load
+
+# R packages as prebuilt Linux binaries from Posit Package Manager (Debian's own r-cran-* are too old for app.R)
+COPY --chown=user install.R DESCRIPTION ./
+RUN if [ "$WITH_R" = "true" ]; then \
+      Rscript -e 'options(repos = c(CRAN = "https://packagemanager.posit.co/cran/__linux__/bookworm/latest")); source("install.R")'; \
+    fi
+
+COPY --chown=user app.py app.R LICENSE CITATION.cff README.md ./
+COPY --chown=user www ./www
+COPY --chown=user demo ./demo
+USER user
 
 ENV BRUTING_CACHE=/tmp/bruting-cache \
     BRUTING_CACHE_GB=20 \

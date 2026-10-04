@@ -1,3 +1,15 @@
+---
+title: Bruting Calls
+emoji: 🦜
+colorFrom: yellow
+colorTo: green
+sdk: docker
+app_port: 8000
+pinned: false
+license: mit
+short_description: BirdNET bird-call detection, verification & reports
+---
+
 # Bruting Calls
 
 **v0.4.0** · part of **Demeter Insights** · by Abhimanyu Raj Singh · MIT licence
@@ -112,11 +124,35 @@ The tests cover the workflow end to end: warning dialog → upload (file picker 
 
 ## Deploy on a shared server
 
+> The block between `---` lines at the top of this README is configuration for Hugging Face Spaces. GitHub shows it as a small table; leave it in place.
+
+### Docker (any host)
+
 ```bash
-docker build -t bruting-calls .
-docker run -p 8000:8000 bruting-calls              # Python app
-docker run -p 8000:8000 -e APP=r bruting-calls     # R app
+docker build -t bruting-calls .                                # Python app (default)
+docker run -p 8000:8000 bruting-calls
+docker build --build-arg WITH_R=true -t bruting-calls-r .      # with R + app.R
+docker run -p 8000:8000 -e APP=r bruting-calls-r
 ```
+
+### Hugging Face Space (Docker)
+
+1. Create a Space: **SDK = Docker**, **Private** recommended (the app has no login). Docker Spaces need HF PRO.
+2. Upload this folder with the `hf` CLI. A plain `git push` is rejected because the repo contains binary files (WAV, JPG, M4A); `hf upload` stores them correctly for you:
+   ```bash
+   hf auth login
+   hf upload <user>/bruting-calls . . --repo-type=space --exclude=".git/*" --exclude="cache/*" --exclude="__pycache__/*" --exclude=".venv/*"
+   ```
+   Re-run the same `hf upload` after each new release.
+3. It builds from the `Dockerfile` and serves on port 8000 (`app_port` above). CPU Basic gives 2 vCPU, 16 GB RAM and 50 GB of non-persistent disk, which fits the 20 GB cache.
+4. Optional **Settings → Variables**: `BRUTING_CACHE_GB`, `BRUTING_MAX_JOBS`. Never set `BRUTING_ALLOW_STOP`.
+
+### Posit Connect Cloud
+
+1. connect.posit.cloud → **Publish** → **Shiny** → this GitHub repo, branch `main`, primary file **`app.py`**. It installs `requirements.txt`.
+2. **Advanced settings → Variables**: `BRUTING_CACHE=/tmp/bruting-cache`, `BRUTING_CACHE_GB=15`, `BRUTING_MAX_JOBS=1`.
+   The free plan has 1 CPU, 4 GB RAM and 24 GiB disk *including the software*, so 20 GB of cache and two TensorFlow jobs don't fit.
+3. Free-plan content is public. Republishing from GitHub picks up new commits.
 
 Settings (environment variables):
 
